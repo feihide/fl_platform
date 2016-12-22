@@ -23,7 +23,6 @@ class CategoryController extends BaseActionController
         else{
             $parent=array();
         }
-        
         return array('request'=>$request,'parent'=>$parent,'data'=>$child['list'],'num'=>$child['num']);
     }
     

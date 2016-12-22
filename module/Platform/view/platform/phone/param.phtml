@@ -1,11 +1,14 @@
 
                 <div class="row">
                     <div class="col-md-8">
-                    <h2>  <a href="/platform/phone/api?moduleId=<?php echo $this->api['module_id'];?>" >返回API列表</a>
+                    <h2>  <a href="/platform/phone/api?moduleId=<?php echo $this->api['module_id']; ?>" >返回API列表</a>
                     	<?php
-                    	use Zend\Form\Element;
-                    	$url='/platform/phone/param?apiId='.$this->request['apiId'].'&';
-                    	if(isset($this->request['apiId'])) echo "API参数列表:[ {$this->api['name']} ] ".'   '.$this->api['route'];?>
+                        use Zend\Form\Element;
+
+$url = '/platform/phone/param?apiId='.$this->request['apiId'].'&';
+                        if (isset($this->request['apiId'])) {
+                            echo "API参数列表:[ {$this->api['name']} ] ".'   '.$this->api['route'];
+                        } ?>
                     </h2>
                         <div class="cl-sidebar">
                         		<div class="row" style="background-color: #EEEEEE">
@@ -14,45 +17,52 @@
                         			 <div class="col-md-1">空</div>
                         			 <div class="col-md-4">操作</div>
                         		</div>
-                        		<?php 
-                        		$moduleType=array(
-                        				'0' => '否',
-                        				'1' => '是',
-                        		);
-                        		 
-                        		 if(!empty($this->data)){
-                        						foreach($this->data as $item){?>
+                        		<?php
+                                $moduleType = array(
+                                        '0' => '否',
+                                        '1' => '是',
+                                );
+
+                                 if (!empty($this->data)) {
+                                     foreach ($this->data as $item) {
+                                         ?>
 											<div class="row" style="background-color: #CCEEEF;margin-top:5px">
-<div class="col-md-2 name" ><?php echo $item['name'];?></div>
-<div class="col-md-5  intro"><?php echo $item['intro'];?></div>
-<div class="col-md-1 can_empty" data-id=<?php echo $item['can_empty']; ?>><?php echo $moduleType[$item['can_empty']];?></div>
-<div class="col-md-4" data-id="<?php echo $item['id'];?>">
+<div class="col-md-2 name" ><?php echo $item['name']; ?></div>
+<div class="col-md-5  intro"><?php echo $item['intro']; ?></div>
+<div class="col-md-1 can_empty" data-id=<?php echo $item['can_empty']; ?>><?php echo $moduleType[$item['can_empty']]; ?></div>
+<div class="col-md-4" data-id="<?php echo $item['id']; ?>">
 <button type="button" class="btn btn-default create" ><span class="glyphicon glyphicon-plus"></span></button>
-<button type="button" class="btn btn-default edit" ><span class="glyphicon glyphicon-edit"></span></button>    
+<button type="button" class="btn btn-default edit" ><span class="glyphicon glyphicon-edit"></span></button>
 <button type="button" class="btn btn-default  remove" ><span class="glyphicon glyphicon-remove"></span></button>
 </div>
 </div>
-                        	<?php } ?>
+                        	<?php
+
+                                     } ?>
                         		<ul class="pagination">
 								  <li><a href="<?echo $url;?>page=1">&laquo;</a></li>
-								  <?php 
-								   $page=$this->num/100;
-								  if($page > intval($page))
-								 	 $page=intval($page)+1;
-								  else
-								    $page=intval($page);
-								  
-								  for($i=1;$i<=$page;$i++){
-									echo "<li ";
-									if($i==$this->request['page']) echo 'class="active"';
-									echo '><a href="'.$url.'page='.$i.'">'.$i.'</a></li>';
-								}
-								echo '<li><a href="'.$url.'page='.$page.'">&raquo;</a></li>';
-								?>
-								
+								  <?php
+                                   $page = $this->num / 100;
+                                     if ($page > intval($page)) {
+                                         $page = intval($page) + 1;
+                                     } else {
+                                         $page = intval($page);
+                                     }
+
+                                     for ($i = 1; $i <= $page; ++$i) {
+                                         echo '<li ';
+                                         if ($i == $this->request['page']) {
+                                             echo 'class="active"';
+                                         }
+                                         echo '><a href="'.$url.'page='.$i.'">'.$i.'</a></li>';
+                                     }
+                                     echo '<li><a href="'.$url.'page='.$page.'">&raquo;</a></li>'; ?>
+
 								</ul>
-                        		<?php }?>
-                        		
+                        		<?php
+
+                                 }?>
+
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -61,18 +71,18 @@
  <form class="form-signin">
         <h2 class="form-signin-heading" id='edit_title'>创建</h2>
         <input type="hidden" value=''  id="param_id"/>
-        <input type="hidden" value='<?php echo $this->request['apiId'];?>'  id="api_id"/>
+        <input type="hidden" value='<?php echo $this->request['apiId']; ?>'  id="api_id"/>
         <input type="text"  id="name" size="200" class="form-control" placeholder="参数名" required autofocus>
         <input type="text" id="intro"   size="200"  class="form-control"  placeholder="说明"  required autofocus>
-        空:<?php 
-       
+        空:<?php
+
 $element = new Element\Select('can_empty');
 $element->setValueOptions($moduleType)->setAttribute('id', 'can_empty');
 echo $this->formSelect($element);
 ?>
         <button class="btn btn-lg btn-primary btn-block" type="button" id="sb">提交</button>
       </form>
-     
+
 
     </div>
 							</div>
@@ -98,7 +108,7 @@ function create(e)
     }).done(function(msg){
         if (msg.status == 0) {
             $(e.target).triggerHandler('success');
-            location.reload() 
+            location.reload()
         } else {
             $(e.target).triggerHandler('error');
             alert('失败');
@@ -115,12 +125,12 @@ function remove(e)
         url: '/platform/phone/deleteparam',
         type: 'POST',
         data: {
- 			id:$(e.target).parent().attr('data-id')           
+ 			id:$(e.target).parent().attr('data-id')
         }
     }).done(function(msg){
    	 if (msg.status == 0) {
          $(e.target).triggerHandler('success');
-         location.reload() 
+         location.reload()
      } else {
          $(e.target).triggerHandler('error');
          alert('失败');
@@ -166,6 +176,6 @@ $(function(){
     });
 
     $('#sb').bind('click',create);
-	
+
 });
 </script>

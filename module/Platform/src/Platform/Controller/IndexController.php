@@ -11,12 +11,12 @@ class IndexController extends BaseActionController
     	$request=$this->getRequest()->getQuery()->toArray();
 
         $moduleData=$this->getDao('platform','module')->getList('is_delete=0',1,100,'module asc');
-    	$module=array(''=>'请选择');    	
+    	$module=array(''=>'请选择');
     	foreach($moduleData as $item){
     		$module[$item['id']]=$item['module'];
     	}
     	$currentApi=array();
-    	$api=array(''=>'请选择');    	
+    	$api=array(''=>'请选择');
     	if(isset($request['module'])&& !empty($request['module'])){
     		$apiData=$this->getDao('platform','api')->getList('is_delete=0 and  module_id='.$request['module'],1,100,'name asc');
     		if(!empty($apiData)){
@@ -26,20 +26,20 @@ class IndexController extends BaseActionController
     					if($request['api']==$item['id'])
     						$currentApi=$item;
     				}
-    				
+
     				$api[$item['id']]=$item['name'];
     			}
     		}
     	}
     	else{
     		$request['module']='';
-    		
+
     	}
-		$param=array();    	
+		$param=array();
     	if(isset($request['api']) && !empty($request['api'])){
-    		
+
     		$param=$this->getDao('platform','param')->getList('is_delete=0 and api_id='.$request['api'],1,100,'name asc');
- 
+
     	}
     	else{
     		$request['api']='';
@@ -82,7 +82,7 @@ class IndexController extends BaseActionController
 
         return new JsonModel(array('status'=>0));
     }
-	
+
 
     public function manageAction()
     {
@@ -104,11 +104,11 @@ class IndexController extends BaseActionController
             return new JsonModel(array('status'=>"一键清除缓存失败"));
         }
     }
-	
-    
+
+
     public function createmoduleAction(){
     	$post=$this->getRequest()->getPost()->toArray();
-    	
+
     	if(empty($post['id'])){
     		unset($post['id']);
 	    	$post=array_merge($post,array('ctime'=>time()));
@@ -121,27 +121,27 @@ class IndexController extends BaseActionController
     	}
     	return new JsonModel(array('status'=>0));
     }
-    
-   
-    
+
+
+
     public function deletemoduleAction(){
     	$post=$this->getRequest()->getPost()->toArray();
     	 if(!empty($post['id']))
     	$this->getDao('platform','module')->delete('id='.$post['id']);
     	return new JsonModel(array('status'=>0));
     }
-   
+
 
     public function apiAction(){
     	$request=$this->getRequest()->getQuery()->toArray();
     	$moduleId=$request['moduleId'];
-    	
+
     	if(!isset($request['page']))
             $request['page']=1;
         $cond='is_delete=0 and module_id='.$moduleId;
     	$data=$this->getDao('platform','api')->getList($cond,$request['page'],100,'name desc');
     	$num=$this->getDao('platform','api')->getCnt($cond);
-    	
+
     	$module=$this->getDao('platform','module')->getOne('id='.$moduleId);
     	return array('data'=>$data,'num'=>$num,'request'=>$request,'module'=>$module);
     }
@@ -267,7 +267,7 @@ class IndexController extends BaseActionController
 
     public function createapiAction(){
     	$post=$this->getRequest()->getPost()->toArray();
-    	
+
     	if(empty($post['id'])){
     		unset($post['id']);
     		$post=array_merge($post,array('ctime'=>time()));
@@ -280,31 +280,31 @@ class IndexController extends BaseActionController
     	}
     	return new JsonModel(array('status'=>0));
     }
-    
+
     public function deleteapiAction(){
     	$post=$this->getRequest()->getPost()->toArray();
     	if(!empty($post['id']))
     		$this->getDao('platform','api')->delete('id='.$post['id']);
     	return new JsonModel(array('status'=>0));
     }
-    
+
     public function paramAction(){
     	$request=$this->getRequest()->getQuery()->toArray();
     	$apiId=$request['apiId'];
-    	 
+
     	if(!isset($request['page']))
     		$request['page']=1;
     	$cond='is_delete=0 and api_id='.$apiId;
     	$data=$this->getDao('platform','param')->getList($cond,$request['page'],100,'name asc');
     	$num=$this->getDao('platform','param')->getCnt($cond);
-    	 
+
     	$api=$this->getDao('platform','api')->getOne('id='.$apiId);
     	return array('data'=>$data,'num'=>$num,'request'=>$request,'api'=>$api);
     }
-    
+
     public function createparamAction(){
     	$post=$this->getRequest()->getPost()->toArray();
-    	 
+    	$post['name'] = trim($post['name']);
     	if(empty($post['id'])){
     		unset($post['id']);
     		$post=array_merge($post,array('ctime'=>time()));
@@ -317,14 +317,14 @@ class IndexController extends BaseActionController
     	}
     	return new JsonModel(array('status'=>0));
     }
-    
+
     public function deleteparamAction(){
     	$post=$this->getRequest()->getPost()->toArray();
     	if(!empty($post['id']))
     		$this->getDao('platform','param')->delete('id='.$post['id']);
     	return new JsonModel(array('status'=>0));
     }
-    
+
     public function testAction(){
     	$re=$this->getRequest()->getPost()->toArray();
     	$param=array();
@@ -334,7 +334,7 @@ class IndexController extends BaseActionController
 			if ($pos  && (strrpos($key,':')!==false))
     			$re['api_route']=str_replace('/'.$key,'/'.$value,$re['api_route']);
 			else
-    			{    
+    			{
         			$param[$key]=$value;
     			}
     	}
@@ -396,7 +396,7 @@ class IndexController extends BaseActionController
                     }
                 }
         }
-		
+
         $sqlStr = '';
         $sqlSum=0;
         if(!empty($sql)){
@@ -414,7 +414,7 @@ class IndexController extends BaseActionController
                 $mongoSum+=$item['consume'];
             }
         }
-		
+
 		$solrStr = '';
 		$solrSum = 0;
 		if(!empty($solr)){
@@ -438,7 +438,7 @@ class IndexController extends BaseActionController
 
     	return @new JsonModel(array('status'=>0,'data'=>$info,'url'=>$url,'apiTime'=>$apiTime,'sql'=>''.$sqlStr.'','mongoTime'=>$mongoSum,'solrTime'=>$solrSum,'sqlTime'=>$sqlSum,'solr' => $solrStr, 'mongo'=>''.$mongoStr.'', 'json'=>'<pre>' . print_r(json_decode($info,true),true).'</pre>'));
     }
-    
+
     function callAPI($method, $url, $data = false)
     {
         //echo 'funk'.$method; echo $url; print_r($data);
@@ -482,9 +482,11 @@ class IndexController extends BaseActionController
         if($msg){
             return new JsonModel(array('status'=>1,'errmsg'=>$msg));
         }
-//       echo $post['name'];
+
+
+//        echo $post['name'];
 //        $d = $this->getMemcache()->get($post['name']);
-//        print_r($d);
+
         $result = $this->getMemcache()->delete($post['name']);
 //        var_dump($result);
 //        $d = $this->getMemcache()->get($post['name']);
@@ -798,5 +800,5 @@ EOF;
     function infoAction(){
         phpinfo();exit;
     }
-    
+
 }

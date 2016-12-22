@@ -25,10 +25,10 @@ define('DATE_FORMAT','Y/m/d H:i:s');
 define('GRAPH_SIZE',200);
 define('MAX_ITEM_DUMP',50);
 
-$MEMCACHE_SERVERS[] = '123.56.86.126:11211'; // add more as an array
-$MEMCACHE_SERVERS[] = '192.168.0.230:11211'; // add more as an array
+//$MEMCACHE_SERVERS[] = '123.56.86.126:11211'; // add more as an array
+$MEMCACHE_SERVERS[] = '192.168.99.100:11211'; // add more as an array
 
-$MEMCACHE_SERVERS[] = '192.168.0.230:22121'; // add more as an array
+//$MEMCACHE_SERVERS[] = '192.168.0.230:22121'; // add more as an array
 ////////// END OF DEFAULT CONFIG AREA /////////////////////////////////////////////////////////////
 
 ///////////////// Password protect ////////////////////////////////////////////////////////////////
